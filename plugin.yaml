@@ -1,0 +1,21 @@
+name: plugin-rust-csv
+version: 1.0.0
+description: "A Rust plugin for CSV parsing and formatting"
+author: "ARO Team"
+license: MIT
+aro-version: ">=0.1.0"
+
+source:
+  git: "git@github.com:arolang/plugin-rust-csv.git"
+  ref: "main"
+
+provides:
+  - type: rust-plugin
+    path: src/
+    build:
+      cargo-target: release
+      output: target/release/libcsv_plugin.dylib
+
+build:
+  rust:
+    minimum-version: "1.75"
