@@ -9,26 +9,52 @@ use std::os::raw::c_char;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
+/// Action definition for plugin metadata
+#[derive(Serialize)]
+struct ActionDef {
+    name: &'static str,
+    role: &'static str,
+    verbs: Vec<&'static str>,
+    prepositions: Vec<&'static str>,
+}
+
 /// Plugin info structure
 #[derive(Serialize)]
 struct PluginInfo {
     name: &'static str,
     version: &'static str,
-    language: &'static str,
-    actions: Vec<&'static str>,
+    actions: Vec<ActionDef>,
 }
 
 /// Get plugin information
 ///
-/// Returns JSON string with plugin metadata.
+/// Returns JSON string with plugin metadata and custom action definitions.
 /// Caller must free the returned string using `aro_plugin_free`.
 #[no_mangle]
 pub extern "C" fn aro_plugin_info() -> *mut c_char {
     let info = PluginInfo {
         name: "plugin-rust-csv",
         version: "1.0.0",
-        language: "rust",
-        actions: vec!["parse-csv", "format-csv", "csv-to-json"],
+        actions: vec![
+            ActionDef {
+                name: "ParseCSV",
+                role: "own",
+                verbs: vec!["parsecsv", "readcsv"],
+                prepositions: vec!["from", "with"],
+            },
+            ActionDef {
+                name: "FormatCSV",
+                role: "own",
+                verbs: vec!["formatcsv", "writecsv"],
+                prepositions: vec!["from", "with"],
+            },
+            ActionDef {
+                name: "CSVToJSON",
+                role: "own",
+                verbs: vec!["csvtojson"],
+                prepositions: vec!["from"],
+            },
+        ],
     };
 
     match serde_json::to_string(&info) {

@@ -15,6 +15,22 @@ provides:
     build:
       cargo-target: release
       output: target/release/libcsv_plugin.dylib
+    actions:
+      - name: ParseCSV
+        role: own
+        verbs: [parsecsv, readcsv]
+        prepositions: [from, with]
+        description: Parse CSV string into array of arrays
+      - name: FormatCSV
+        role: own
+        verbs: [formatcsv, writecsv]
+        prepositions: [from, with]
+        description: Format array of arrays as CSV string
+      - name: CSVToJSON
+        role: own
+        verbs: [csvtojson]
+        prepositions: [from]
+        description: Convert CSV to JSON array of objects
 
 build:
   rust:
